@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class Amongus : MonoBehaviour
 {
     [SerializeField, Range(0, 1)] float moveDuration = 0.1f;
     [SerializeField, Range(0, 1)] float jumpHeight = 0.5f;
-    
+
+    public UnityEvent<Vector3> OnJumpEnd;
+
     void Update()
     {
         if (DOTween.IsTweening(transform))
@@ -39,9 +42,16 @@ public class Amongus : MonoBehaviour
 
     public void Move(Vector3 direction)
     {
-        transform.DOJump(transform.position + direction,jumpHeight,1,moveDuration);
+        transform.
+        DOJump(transform.position + direction, jumpHeight, 1, moveDuration)
+        .onComplete = BroadCastPositionOnJumpEnd;
 
         transform.forward = direction;
+    }
+
+    private void BroadCastPositionOnJumpEnd()
+    {
+        OnJumpEnd.Invoke(transform.position);
     }
 }
 

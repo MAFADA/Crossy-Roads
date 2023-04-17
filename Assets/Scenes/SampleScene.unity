@@ -152,13 +152,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 466676703b9d9094eb48d5e171d43fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grassPrefab: {fileID: 5860597811236083642, guid: 847a24a00ff412845b8f9ef6ec624ee4, type: 3}
-  roadPrefab: {fileID: 8101742503415348116, guid: 5804c7f7ecd8de94990931dbd676be8b, type: 3}
+  amongus: {fileID: 1487267816}
+  terrainList:
+  - {fileID: 5860597811236083642, guid: 847a24a00ff412845b8f9ef6ec624ee4, type: 3}
+  - {fileID: 8101742503415348116, guid: 5804c7f7ecd8de94990931dbd676be8b, type: 3}
   initialGrassCount: 5
   horizontalSize: 9
-  backViewDistance: -3
-  forwardViewDistance: 15
-  treeProbability: 0.5
+  backViewDistance: -4
+  forwardViewDistance: 10
+  treeProbability: 0.59
+  travelDistance: 0
 --- !u!4 &125487417
 Transform:
   m_ObjectHideFlags: 0
@@ -574,6 +577,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -647,6 +651,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 36.3, y: -29.3, z: -0.001}
+--- !u!114 &963194229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fec9dbc352cdfb4f9eccfef1380a34d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
+  moveDuration: 0.2
 --- !u!1 &1165007467
 GameObject:
   m_ObjectHideFlags: 0
@@ -889,6 +907,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveDuration: 0.1
   jumpHeight: 0.5
+  OnJumpEnd:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 963194229}
+        m_TargetAssemblyTypeName: PlayerCamera, Assembly-CSharp
+        m_MethodName: UpdatePosition
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 125487416}
+        m_TargetAssemblyTypeName: PlayManager, Assembly-CSharp
+        m_MethodName: UpdateTravelDistance
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1943041574
 GameObject:
   m_ObjectHideFlags: 0
