@@ -5,13 +5,11 @@ using UnityEngine.Events;
 
 public class PlayManager : MonoBehaviour
 {
-    [SerializeField] Amongus amongus;
     [SerializeField] List<Terrain> terrainList;
     [SerializeField] int initialGrassCount = 5;
     [SerializeField] int horizontalSize;
     [SerializeField] int backViewDistance = -4;
     [SerializeField] int forwardViewDistance = 13;
-    [SerializeField, Range(0, 1)] float treeProbability;
 
     Dictionary<int, Terrain> activeTerrainDict = new Dictionary<int, Terrain>(20);
 
@@ -45,23 +43,23 @@ public class PlayManager : MonoBehaviour
             SpawnRandomTerrain(zPos);
         }
 
-        SpawnRandomTerrain(0);
+        OnUpdateTerrainLimit.Invoke(horizontalSize, travelDistance + backViewDistance);
     }
 
     private Terrain SpawnRandomTerrain(int zPos)
     {
-        Terrain terrainCheck = null;
+        Terrain comparatorTerrain = null;
         int randomIndex;
 
         for (int z = -1; z >= -3; z--)
         {
             var checkPos = zPos + z;
-            if (terrainCheck == null)
+            if (comparatorTerrain == null)
             {
-                terrainCheck = activeTerrainDict[checkPos];
+                comparatorTerrain = activeTerrainDict[checkPos];
                 continue;
             }
-            else if (terrainCheck.GetType() != activeTerrainDict[checkPos].GetType())
+            else if (comparatorTerrain.GetType() != activeTerrainDict[checkPos].GetType())
             {
                 randomIndex = Random.Range(0, terrainList.Count);
                 return SpawnTerrain(terrainList[randomIndex], zPos);
@@ -76,7 +74,7 @@ public class PlayManager : MonoBehaviour
         var candidateTerrain = new List<Terrain>(terrainList);
         for (int i = 0; i < candidateTerrain.Count; i++)
         {
-            if (terrainCheck.GetType() == candidateTerrain[i].GetType())
+            if (comparatorTerrain.GetType() == candidateTerrain[i].GetType())
             {
                 candidateTerrain.Remove(candidateTerrain[i]);
                 break;
@@ -88,9 +86,18 @@ public class PlayManager : MonoBehaviour
 
     }
 
+    public Terrain SpawnTerrain(Terrain terrain, int zPos)
+    {
+        terrain = Instantiate(terrain);
+        terrain.transform.position = new Vector3(0, 0, zPos);
+        terrain.Generate(horizontalSize);
+        activeTerrainDict[zPos] = terrain;
+        return terrain;
+    }
+
     public void UpdateTravelDistance(Vector3 targetPosition)
     {
-        if (amongus.transform.position.z > travelDistance)
+        if (targetPosition.z > travelDistance)
         {
             travelDistance = Mathf.CeilToInt(targetPosition.z);
             UpdateTerrain();
@@ -105,14 +112,9 @@ public class PlayManager : MonoBehaviour
 
         var spawnPosition = travelDistance - 1 + forwardViewDistance;
         SpawnRandomTerrain(spawnPosition);
+
+        OnUpdateTerrainLimit.Invoke(horizontalSize, travelDistance + backViewDistance);
     }
 
-    public Terrain SpawnTerrain(Terrain terrain, int zPos)
-    {
-        terrain = Instantiate(terrain);
-        terrain.transform.position = new Vector3(0, 0, zPos);
-        terrain.Generate(horizontalSize);
-        activeTerrainDict[zPos] = terrain;
-        return terrain;
-    }
+
 }

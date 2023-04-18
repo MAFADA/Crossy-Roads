@@ -43,14 +43,17 @@ public class Grass : Terrain
         SpawnRandomTree(limit + 1);
     }
 
-    private void SpawnRandomTree(int pos)
+    private void SpawnRandomTree(int xPos)
     {
         // pilih prefab pohon random
         var randomIndex = Random.Range(0, treePrefabList.Count);
         var prefab = treePrefabList[randomIndex];
 
         //set pohon ke posisi yg terpilih
-        var tree = Instantiate(prefab, transform);
-        tree.transform.localPosition = new Vector3(pos, 0, 0);
+        var tree = Instantiate(
+            prefab,
+            new Vector3(xPos, 0, z: this.transform.position.z),
+            Quaternion.identity,
+            transform);
     }
 }
