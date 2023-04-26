@@ -12,10 +12,12 @@ public class Amongus : MonoBehaviour
     [SerializeField] int rightMoveLimit;
     [SerializeField] int backMoveLimit;
     public UnityEvent<Vector3> OnJumpEnd;
-    private bool isDie = false;
+    public UnityEvent<int> OnGetCoin;
+    public UnityEvent OnDie;
+    private bool isMoveable = false;
     void Update()
     {
-        if (isDie)
+        if (isMoveable == false)
         {
             return;
         }
@@ -85,13 +87,40 @@ public class Amongus : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isDie == true)
+        if (other.CompareTag("Car"))
         {
-            return;
+            if (transform.localScale.y == 0.01f)
+                return;
+            transform.DOScale(new Vector3(2,0.1f,2), 0.2f);
+            isMoveable = false;
+            Invoke("Die", 3);
         }
-        transform.DOScaleY(0.1f, 0.2f);
-        isDie = true;
+
+        else if (other.CompareTag("Coin"))
+        {
+            var coin = other.GetComponent<Coin>();
+            OnGetCoin.Invoke(coin.Value);
+            coin.Collected();
+        }
+
+        else if (other.CompareTag("Eagle"))
+        {
+            if (this.transform != other.transform)
+            {
+                this.transform.SetParent(other.transform);
+                Invoke("Die", 3);
+            }
+        }
     }
 
+    private void Die()
+    {
+        OnDie.Invoke();
+    }
+
+    public void SetMoveable(bool value)
+    {
+        isMoveable = value;
+    }
 }
 
