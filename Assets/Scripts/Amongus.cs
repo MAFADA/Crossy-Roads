@@ -13,6 +13,7 @@ public class Amongus : MonoBehaviour
     [SerializeField] int backMoveLimit;
     public UnityEvent<Vector3> OnJumpEnd;
     public UnityEvent<int> OnGetCoin;
+    public UnityEvent OnCarCollision;
     public UnityEvent OnDie;
     private bool isMoveable = false;
     void Update()
@@ -93,6 +94,7 @@ public class Amongus : MonoBehaviour
                 return;
             transform.DOScale(new Vector3(2,0.1f,2), 0.2f);
             isMoveable = false;
+            OnCarCollision.Invoke();
             Invoke("Die", 3);
         }
 
