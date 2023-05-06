@@ -15,6 +15,8 @@ public class Amongus : MonoBehaviour
     public UnityEvent<int> OnGetCoin;
     public UnityEvent OnCarCollision;
     public UnityEvent OnDie;
+    public UnityEvent OnDieSound;
+    public UnityEvent OnJump;
     private bool isMoveable = false;
     void Update()
     {
@@ -69,6 +71,7 @@ public class Amongus : MonoBehaviour
             1,
              moveDuration)
         .onComplete = BroadCastPositionOnJumpEnd;
+        OnJump.Invoke();
 
         transform.forward = direction;
     }
@@ -95,6 +98,7 @@ public class Amongus : MonoBehaviour
             transform.DOScale(new Vector3(2,0.1f,2), 0.2f);
             isMoveable = false;
             OnCarCollision.Invoke();
+            OnDieSound.Invoke();
             Invoke("Die", 3);
         }
 
