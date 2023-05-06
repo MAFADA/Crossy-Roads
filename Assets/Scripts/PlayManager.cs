@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
 public class PlayManager : MonoBehaviour
@@ -160,5 +161,12 @@ public class PlayManager : MonoBehaviour
         OnUpdateTerrainLimit.Invoke(horizontalSize, travelDistance + backViewDistance);
     }
 
+    public void Replay(){
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void BackToMenu(){
+        SceneManager.LoadScene("Main Menu");
+    }
 
 }
